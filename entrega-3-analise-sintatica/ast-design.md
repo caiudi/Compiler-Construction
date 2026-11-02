@@ -109,3 +109,227 @@ Todos os nós herdam `Node(linha:int, coluna:int)` e futuramente implementarão 
 - Para um `IfNode`, a posição é a de `IF`; para `VarDeclNode`, a posição é a do token de tipo; para `CallExprNode`, a posição é a do identificador da chamada.
 - Mais adiante, `IdNode` poderá receber referência para símbolo e `ExprNode` poderá receber um tipo inferido. **Esses campos não são implementados no CP3.**
 - Em recuperação de erro, não apresentar uma AST parcial como válida para fases seguintes
+
+- ## 5. Exemplo de programa e Árvore de Sintaxe Abstrata (AST)
+
+### 5.1. Programa utilizado
+
+O programa abaixo foi construído conforme a gramática do Checkpoint 2. Ele contém uma função, uma declaração de variável, uma seleção (`if/else`), uma repetição (`while`) e um retorno.
+
+```java
+int calcular(int a, int b) {
+    int resultado = 0;
+
+    if (a > b) {
+        resultado = a;
+    } else {
+        resultado = b;
+    }
+
+    while (resultado > 0) {
+        resultado = resultado - 1;
+    }
+
+    return resultado;
+}
+```
+
+## 6. Elementos da árvore de derivação descartados pela AST
+
+A AST não representa todos os símbolos utilizados durante a análise sintática. Ela preserva apenas as informações necessárias às próximas etapas da compilação.
+
+### 6.1. Não-terminais de precedência
+
+Na gramática do CP2, uma expressão formada por um identificador pode passar pela cadeia:
+
+```text
+Expressao
+  → OuLogico
+  → ELogico
+  → Igualdade
+  → Relacional
+  → Aditiva
+  → Multiplicativa
+  → Unaria
+  → Primaria
+  → IDENTIFICADOR
+```
+
+Na AST, essa cadeia é reduzida a:
+
+```text
+IdNode(name=a)
+```
+
+**Justificativa:** os não-terminais intermediários organizam a precedência da gramática, mas não representam operações adicionais quando não há operadores.
+
+### 6.2. Eliminação da recursão à esquerda
+
+A gramática utiliza:
+
+```text
+Aditiva → Multiplicativa AditivaLinha
+
+AditivaLinha →
+    MENOS Multiplicativa AditivaLinha
+    | MAIS Multiplicativa AditivaLinha
+    | ε
+```
+
+Para a expressão:
+
+```text
+a - b - c
+```
+
+A AST produzida deve ser:
+
+```text
+BinaryExprNode(operator=MENOS)
+  BinaryExprNode(operator=MENOS)
+    IdNode(name=a)
+    IdNode(name=b)
+  IdNode(name=c)
+```
+
+**Justificativa:** `AditivaLinha` é um auxiliar da transformação da gramática. A AST representa as operações diretamente e preserva a associatividade à esquerda: `(a - b) - c`.
+
+### 6.3. Fatoração da gramática
+
+A produção:
+
+```text
+ComandoIdentificador →
+    IDENTIFICADOR ComplementoIdentificador
+
+ComplementoIdentificador →
+    ATRIBUICAO Expressao PONTO_VIRGULA
+    | ABRE_PARENTESES Argumentos
+      FECHA_PARENTESES PONTO_VIRGULA
+```
+
+Para o comando:
+
+```text
+resultado = a;
+```
+
+A AST contém:
+
+```text
+AssignNode
+  IdNode(name=resultado)
+  IdNode(name=a)
+```
+
+**Justificativa:** `ComplementoIdentificador` existe para distinguir atribuições de chamadas de função ou procedimento. Ele não precisa ser representado como nó próprio.
+
+### 6.4. Pontuação e delimitadores
+
+Os seguintes elementos são consumidos pelo parser, mas não produzem nós independentes:
+
+- `ABRE_PARENTESES` e `FECHA_PARENTESES`;
+- `ABRE_CHAVES` e `FECHA_CHAVES`;
+- `VIRGULA`;
+- `PONTO_VIRGULA`;
+- `EOF`.
+
+Esses tokens organizam a sintaxe concreta, mas suas funções já são representadas pela estrutura e pelos atributos da AST.
+
+---
+
+## 7. Formato determinístico do impressor da AST
+
+O visitor responsável pela impressão da AST seguirá regras fixas para permitir a comparação automática entre a árvore produzida e a árvore esperada.
+
+### 7.1. Regras de impressão
+
+1. Cada nó será apresentado em uma linha.
+2. A indentação utilizará dois espaços por nível de profundidade.
+3. O nome da classe concreta identificará o tipo do nó.
+4. Atributos relevantes serão apresentados entre parênteses, no formato `atributo=valor`.
+5. Os filhos serão percorridos em ordem fixa, conforme a hierarquia definida na Seção 2.
+6. Atributos opcionais ausentes serão omitidos.
+7. Listas vazias não produzirão linhas adicionais.
+8. Não serão impressos endereços de memória nem valores dependentes da execução.
+9. O texto será produzido com separador de linhas `\n`, inclusive após a última linha.
+10. A posição dos nós não será incluída na impressão canônica, pois a mesma AST poderá ser reconstruída com posições diferentes após a reimpressão do código-fonte.
+
+### 7.2. Ordem dos filhos
+
+| Nó | Ordem de impressão |
+|---|---|
+| `ProgramNode` | Declarações na ordem original |
+| `VarDeclNode` | Tipo, identificador, inicializador opcional |
+| `LocalVarStmtNode` | Declaração |
+| `FunctionDeclNode` | Tipo de retorno, nome, parâmetros, corpo |
+| `ProcedureDeclNode` | Nome, parâmetros, corpo |
+| `ParamNode` | Tipo, nome |
+| `BlockNode` | Comandos na ordem original |
+| `AssignNode` | Destino, expressão |
+| `IfNode` | Condição, bloco `then`, bloco `else` opcional |
+| `WhileNode` | Condição, corpo |
+| `CallStmtNode` | Expressão de chamada |
+| `ReturnNode` | Expressão opcional |
+| `BinaryExprNode` | Operando esquerdo, operando direito |
+| `UnaryExprNode` | Operando |
+| `CallExprNode` | Identificador da função, argumentos |
+
+### 7.3. Exemplo de impressão
+
+Para a expressão:
+
+```text
+a + b * c
+```
+
+A impressão será:
+
+```text
+BinaryExprNode(operator=MAIS)
+  IdNode(name=a)
+  BinaryExprNode(operator=MULTIPLICACAO)
+    IdNode(name=b)
+    IdNode(name=c)
+```
+
+A representação evidencia que a multiplicação possui maior precedência que a adição.
+
+Para a expressão:
+
+```text
+a - (b - c)
+```
+
+A impressão será:
+
+```text
+BinaryExprNode(operator=MENOS)
+  IdNode(name=a)
+  BinaryExprNode(operator=MENOS)
+    IdNode(name=b)
+    IdNode(name=c)
+```
+
+Essa árvore é diferente da produzida para `a - b - c`, permitindo que os testes identifiquem erros de associatividade.
+
+---
+
+## 8. Considerações finais
+
+A hierarquia proposta representa as categorias sintáticas necessárias para as próximas fases do compilador, evitando a reprodução desnecessária de símbolos e produções auxiliares da gramática LL(1).
+
+O projeto contempla:
+
+- Declarações globais e locais;
+- Funções, procedimentos e parâmetros;
+- Tipos básicos;
+- Blocos e comandos;
+- Seleção e repetição;
+- Atribuição, chamada e retorno;
+- Expressões literais, identificadores e operações;
+- Posições de origem dos nós;
+- Estrutura preparada para o padrão Visitor;
+- Impressão determinística da árvore.
+
+A AST foi projetada para permitir a inclusão futura de informações de tabela de símbolos e tipos sem alterar sua estrutura fundamental.
