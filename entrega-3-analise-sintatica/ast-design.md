@@ -12,24 +12,17 @@
 
 **Parte 1 — Projeto da hierarquia de nós**
 
-**Referência:** Gramática final do Checkpoint 2  
 **Data:** Novembro de 2026
 
 </div>
 
 ---
 
-> **Versão consolidada do projeto da AST.** Baseada na gramática do CP2. O desenho abaixo é textual; a exigência de desenho feito à mão permanece pendente. A autoria e o uso de IA devem ser registrados com transparência no log da entrega.
-
 ## 1. Objetivo e decisões
 
 A AST preserva construções com significado para as próximas fases, não todos os símbolos da derivação. As posições `linha:int` e `coluna:int` pertencem à classe abstrata `Node` e representam o **primeiro token da construção**. A hierarquia abaixo define a estrutura a ser usada pelo parser e pelos visitors.
 
-**Extensão planejada para literais `char`:** o CP1 já reconhece `CHAR` como palavra-chave de tipo, mas não reconhece `CHAR_LITERAL` (por exemplo, `'A'`). Para cumprir o escopo de cinco tipos básicos, o projeto passa a prever `CharLiteralNode` e a produção `Primaria → CHAR_LITERAL`. **Esta é uma mudança proposta, ainda não implementada nem validada no scanner/parser originais.** A restrição do CP3 de manter o scanner do CP1 sem modificação precisa ser resolvida com o docente antes de adotá-la na entrega.
-
-A classificação de `NUMERO` em `IntLiteralNode` ou `DoubleLiteralNode` depende de o scanner do CP1 efetivamente aceitar os dois formatos e preservar o lexema; isso deve ser conferido no código original.
-
-## 2. Hierarquia proposta para validação do grupo
+## 2. Hierarquia proposta
 
 Todos os nós herdam `Node(linha:int, coluna:int)` e futuramente implementarão `accept(Visitor<T>)`.
 
@@ -115,142 +108,4 @@ Todos os nós herdam `Node(linha:int, coluna:int)` e futuramente implementarão 
 - Cada nó registra `linha` e `coluna` do primeiro token da construção. Para uma expressão binária, o nó da operação completa começa no primeiro token do operando esquerdo, **não** na posição do operador.
 - Para um `IfNode`, a posição é a de `IF`; para `VarDeclNode`, a posição é a do token de tipo; para `CallExprNode`, a posição é a do identificador da chamada.
 - Mais adiante, `IdNode` poderá receber referência para símbolo e `ExprNode` poderá receber um tipo inferido. **Esses campos não são implementados no CP3.**
-- Em recuperação de erro, não apresentar uma AST parcial como válida para fases seguintes.
-
-## 5. Programa curto para desenho manual
-
-```text
-int calcula(int a) {
-    int total = 0;
-    while (a > 0) {
-        if (a > 2) {
-            total = total + a;
-        } else {
-            total = total + 1;
-        }
-        a = a - 1;
-    }
-    return total;
-}
-```
-
-### Árvore textual completa (o desenho à mão ainda deve ser feito pelo grupo)
-
-```text
-Program
-  FunctionDecl(calcula)
-    Type(INT)
-    Id(calcula)
-    Param
-      Type(INT)
-      Id(a)
-    Block
-      LocalVarStmt
-        VarDecl
-          Type(INT)
-          Id(total)
-          IntLiteral(0)
-      While
-        Binary(>)
-          Id(a)
-          IntLiteral(0)
-        Block
-          If
-            Binary(>)
-              Id(a)
-              IntLiteral(2)
-            Block
-              Assign
-                Id(total)
-                Binary(+)
-                  Id(total)
-                  Id(a)
-            Block [else]
-              Assign
-                Id(total)
-                Binary(+)
-                  Id(total)
-                  IntLiteral(1)
-          Assign
-            Id(a)
-            Binary(-)
-              Id(a)
-              IntLiteral(1)
-      Return
-        Id(total)
-```
-
-Esse exemplo tem mais de 15 nós, uma função, uma seleção e uma repetição. É um **modelo textual**, não substitui a árvore desenhada à mão exigida no enunciado.
-
-### Três trechos da derivação descartados
-
-1. `Expressao → OuLogico → ELogico → Igualdade → Relacional → Aditiva → Multiplicativa → Unaria → Primaria → IDENTIFICADOR` é reduzido a `Id(a)`.
-2. `AditivaLinha → MAIS Multiplicativa AditivaLinha` é representado por `Binary(+)`, sem nó `AditivaLinha`.
-3. `ComplementoGlobal → ABRE_PARENTESES Parametros FECHA_PARENTESES Bloco` vira uma `FunctionDecl` com lista de parâmetros e corpo, sem nós de parênteses ou de `ComplementoGlobal`.
-
-## 6. Formato proposto para a impressão determinística
-
-- Pré-ordem (visitar o nó antes dos filhos), dois espaços por nível.
-- Uma linha por nó; usar o nome do tipo e atributos essenciais, como `Binary(+)`, `Id(total)` e `Type(INT)`.
-- Filhos sempre na ordem da gramática e das listas; `else` depois de `then`; argumentos na ordem original.
-- Campos opcionais ausentes são impressos como `Else(None)`, `Initializer(None)` ou `ReturnValue(None)` em linha filha. Listas são impressas com cabeçalhos `Parameters(n)`, `Arguments(n)`, `Declarations(n)` e `Statements(n)`, seguidos dos filhos em ordem. A árvore textual da seção 5 é um esboço didático; a saída exata dos testes deve seguir esta convenção, inclusive os cabeçalhos.
-- `linha` e `coluna` são omitidas do texto de comparação estrutural, pois não alteram a forma da AST; ficam guardadas no objeto.
-
-## 7. Limites e conferência antes da entrega
-
-A estrutura mapeia os 39 não-terminais da gramática apresentada no CP2. O suporte a `CHAR_LITERAL` está **especificado como extensão**, mas depende de aprovação para alterar o scanner do CP1 e de implementação e testes; não é correto declarar que já funciona na versão original.
-
-A árvore da seção 5 foi construída em texto; **não deve ser descrita como desenho feito à mão**. A atividade pede que o grupo faça esse desenho em papel. Os campos semânticos futuros (símbolo do identificador e tipo inferido da expressão) não são implementados nesta etapa.
-
-A utilização de IA na elaboração deste documento deve ser registrada no `log-uso-ia.md`, conforme as regras efetivas da disciplina.
-
-
-## 8. Extensão proposta — reconhecimento de literais `char`
-
-### 8.1. Distinção entre tipo e literal
-
-- `CHAR`: palavra-chave `char`, já reconhecida pelo CP1, usada em declarações.
-- `CHAR_LITERAL`: valor entre aspas simples, como `'A'`, `'7'`, `'\n'` ou `'\''`, **a acrescentar** ao scanner.
-- `CharLiteralNode`: nó de expressão, com `value: char` e posição do token inicial.
-
-### 8.2. Mudanças necessárias no código (não aplicadas nesta versão)
-
-1. Acrescentar `CHAR_LITERAL` ao enum `TokenType`.
-2. Acrescentar um reconhecedor de literal de caractere ao `Scanner`, preservando linha e coluna, verificando exatamente um caractere ou uma sequência de escape permitida entre aspas simples. Exemplos válidos: `'a'`, `'0'`, `'\n'`, `'\t'`, `'\\'`, `'\''`. Exemplos inválidos: `''`, `'ab'`, `'x` e `'\q'`.
-3. Acrescentar `| CHAR_LITERAL` à produção `Primaria` da gramática.
-4. Atualizar o parser: quando o lookahead for `CHAR_LITERAL`, consumir o token e construir `CharLiteralNode` com a posição do token e o valor decodificado.
-5. Acrescentar `visitCharLiteral(CharLiteralNode node)` à interface `Visitor<T>` e aos dois visitors. O reimpressor deve escapar corretamente caracteres especiais.
-
-### 8.3. Atualização dos conjuntos
-
-Com a produção `Primaria → CHAR_LITERAL`, acrescentar `CHAR_LITERAL` a `FIRST(Primaria)` e a `FIRST` de todos os níveis que derivam `Primaria`: `Unaria`, `Multiplicativa`, `Aditiva`, `Relacional`, `Igualdade`, `ELogico`, `OuLogico` e `Expressao`; também a `FIRST(Argumentos)` e `FIRST(ValorRetorno)`. O token passa a integrar os conjuntos FOLLOW de `OperadorRelacional` e de outros símbolos que precedem expressões, conforme o cálculo completo. **Os conjuntos FIRST/FOLLOW e a verificação LL(1) devem ser recalculados e publicados em `gramatica-first-follow.md` antes da entrega.**
-
-### 8.4. Testes propostos
-
-```text
-char letra = 'A';                // válido após a extensão
-char novaLinha = '\n';          // válido após a extensão
-char vazio = '';                 // erro léxico
-char dois = 'ab';                // erro léxico
-char invalido = '\q';          // erro léxico
-```
-
-**Compatibilidade com o enunciado:** a exigência expressa de manter o scanner do CP1 sem modificação impede afirmar que esses testes passam no CP3 atual. É necessária autorização do docente para estender o scanner, ou uma orientação alternativa para o caso de `char`.
-
-
-## 9. Revisão de conformidade com a Parte 1 do enunciado
-
-| Requisito | Local | Situação |
-|---|---|---|
-| Tabela de nós, atributos tipados e produções | Seção 2 | Documentado |
-| Mapeamento de cada não-terminal e justificativas | Seção 3 | Documentado |
-| Três classes de auxiliares (precedência, recursão à esquerda, fatoração) | Seção 3 | Documentado |
-| Descarte de pontuação e delimitadores | Seção 3 | Documentado |
-| Linha e coluna do primeiro token | Seção 4 | Especificado; confirmar se o token do CP1 guarda coluna |
-| Exemplo com função, seleção, repetição e mais de 15 nós | Seção 5 | Esboço textual presente; desenho manual pendente |
-| Três trechos de derivação descartados | Seção 5 | Documentado |
-| Extensibilidade para símbolo e tipo semântico | Seção 4 | Documentado sem implementação |
-| Impressão determinística para testes futuros | Seção 6 | Especificada; alinhar a saída exata dos visitors |
-| Literais `char` | Seção 8 | **Pendente:** scanner original não os reconhece; depende de autorização e revisão de CP1/CP2 |
-
-**Conferências antes de entregar:** (1) conferir as assinaturas e os nomes reais de tokens no código do CP1; (2) desenhar manualmente a AST e anexar foto ou desenho feito pelo grupo; (3) não afirmar que `CHAR_LITERAL` já funciona; (4) assegurar que a saída de exemplo e o visitor futuro sigam exatamente a mesma convenção; (5) registrar o uso de IA no log.
+- Em recuperação de erro, não apresentar uma AST parcial como válida para fases seguintes
