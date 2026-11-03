@@ -315,21 +315,4 @@ Essa árvore é diferente da produzida para `a - b - c`, permitindo que os teste
 
 ---
 
-## 8. Considerações finais
-
-A hierarquia proposta representa as categorias sintáticas necessárias para as próximas fases do compilador, evitando a reprodução desnecessária de símbolos e produções auxiliares da gramática LL(1).
-
-O projeto contempla:
-
-- Declarações globais e locais;
-- Funções, procedimentos e parâmetros;
-- Tipos básicos;
-- Blocos e comandos;
-- Seleção e repetição;
-- Atribuição, chamada e retorno;
-- Expressões literais, identificadores e operações;
-- Posições de origem dos nós;
-- Estrutura preparada para o padrão Visitor;
-- Impressão determinística da árvore.
-
-A AST foi projetada para permitir a inclusão futura de informações de tabela de símbolos e tipos sem alterar sua estrutura fundamental.
+<img width="1437" height="679" alt="image" src="https://github.com/user-attachments/assets/7b2265b7-80a2-4479-95d9-5dbe8dbceac7" />
