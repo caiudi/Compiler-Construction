@@ -136,6 +136,8 @@ int calcular(int a, int b) {
 
 ## 6. Elementos da árvore de derivação descartados pela AST
 
+<img width="1426" height="662" alt="image" src="https://github.com/user-attachments/assets/b57f593f-027e-4310-8be3-e9e124129893" />
+
 A AST não representa todos os símbolos utilizados durante a análise sintática. Ela preserva apenas as informações necessárias às próximas etapas da compilação.
 
 ### 6.1. Não-terminais de precedência
@@ -314,5 +316,3 @@ BinaryExprNode(operator=MENOS)
 Essa árvore é diferente da produzida para `a - b - c`, permitindo que os testes identifiquem erros de associatividade.
 
 ---
-
-<img width="1437" height="679" alt="image" src="https://github.com/user-attachments/assets/7b2265b7-80a2-4479-95d9-5dbe8dbceac7" />
