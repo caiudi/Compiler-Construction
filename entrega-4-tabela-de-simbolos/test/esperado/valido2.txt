@@ -1,0 +1,27 @@
+ProgramNode
+  FunctionDeclNode
+    TypeNode(kind=INT)
+    IdNode(name=soma)
+    ParamNode
+      TypeNode(kind=INT)
+      IdNode(name=a)
+    ParamNode
+      TypeNode(kind=INT)
+      IdNode(name=b)
+    BlockNode
+      ReturnNode
+        BinaryExprNode(operator=MAIS)
+          IdNode(name=a)
+          IdNode(name=b)
+  ProcedureDeclNode
+    IdNode(name=main)
+    BlockNode
+      LocalVarStmtNode
+        VarDeclNode
+          TypeNode(kind=INT)
+          IdNode(name=x)
+          CallExprNode
+            IdNode(name=soma)
+            IntLiteralNode(lexeme=2)
+            IntLiteralNode(lexeme=3)
+      ReturnNode
