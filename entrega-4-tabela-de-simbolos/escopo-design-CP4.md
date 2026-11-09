@@ -207,17 +207,3 @@ int f;             // erro: nome f já declarado no escopo global
 ```
 
 **Esperado:** `linha 2: 'f' já declarado neste escopo (linha 1)`; a função `f@1` permanece registrada.
-
-## 5. Escolha de implementação para a Parte 2
-
-**Implementação escolhida: pilha de mapas (`Deque<Map<String, Symbol>>`).** Cada `openScope()` empilha um mapa vazio e `closeScope()` remove o mapa do topo. `lookupLocal()` consulta apenas o topo, enquanto `lookup()` percorre os mapas do mais interno ao mais externo. É simples de testar e corresponde diretamente ao desenho dos ambientes. O escopo global é criado na inicialização; tentar fechar o global será uma operação inválida documentada (ex.: `IllegalStateException`), nunca `NullPointerException`.
-
-## 6. Critérios de conferência antes de programar
-
-- Conferir que `x` na linha 7 resolve para `x@6`, mas na linha 14 resolve para `x@1`.
-- Conferir que `z@9` é encontrado na linha 10 e **não** na linha 12.
-- Conferir que `p@2` permanece visível em todos os blocos internos da função.
-- Conferir que o único erro do programa de referência é `linha 12: 'z' não declarado`.
-- Comparar essas expectativas escritas manualmente com a saída da passada de identificação depois da implementação; **não gerar as expectativas copiando a saída da passada**.
-
-**Nota de compatibilidade:** os exemplos pressupõem a sintaxe de declarações `int nome;`, funções `int f(...) { ... }`, `if`, `while` e `return` da gramática do CP3. Os exemplos foram alinhados às construções presentes no parser do CP3. As decisões de escopo aqui descritas são propostas para implementação no CP4 e deverão ser conferidas nos testes, não resultados já obtidos pela execução do visitor.
