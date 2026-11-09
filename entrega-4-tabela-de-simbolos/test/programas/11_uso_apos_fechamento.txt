@@ -1,0 +1,6 @@
+int f() {
+    if (true) {
+        int z = 1;
+    }
+    return z;
+}

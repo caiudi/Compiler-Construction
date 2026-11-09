@@ -1,0 +1,2 @@
+int f = 1;
+int f() { return 1; }
