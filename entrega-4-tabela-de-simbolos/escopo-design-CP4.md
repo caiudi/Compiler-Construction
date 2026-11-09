@@ -14,17 +14,6 @@
 
 ---
 
-## 1. Objetivo e compatibilidade com os checkpoints anteriores
-
-Este documento foi revisado considerando os arquivos do repositório `caiudi/Compiler-Construction`, especialmente o `Parser.java` e o `ast-design.md` do Checkpoint 3.
-
-- **CP1:** reconhecimento dos tokens da linguagem.
-- **CP2:** gramática LL(1), declarações tipadas, atribuição com `=`, funções, `if`, `while`, `return` e blocos `{ }`.
-- **CP3:** AST com `ProgramNode`, `FunctionDeclNode`, `ParamNode`, `BlockNode`, `LocalVarStmtNode`, `VarDeclNode`, `AssignNode`, `IfNode`, `WhileNode`, `ReturnNode` e `IdNode`.
-- **CP4:** acrescenta identificação de nomes e ambientes, sem alterar a gramática e sem realizar checagem de tipos.
-
-O parser do CP3 **não reconhece** `var a`, atribuição `:=`, declaração `const` nem funções aninhadas dentro de blocos. Por isso, os exemplos utilizam somente construções existentes na linguagem.
-
 ## 1.1 Objetivo e convenções
 
 O objetivo é projetar a identificação de nomes sobre a AST do CP3. Um **ambiente** é a pilha de escopos atualmente visíveis. O símbolo `x@L` representa a declaração de `x` na linha `L`. A busca começa no escopo mais interno e continua em direção ao global. As tabelas abaixo são **expectativas desenhadas antes da implementação da passada de identificação**, não resultados de execução.
