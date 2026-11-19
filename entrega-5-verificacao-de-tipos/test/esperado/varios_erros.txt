@@ -1,0 +1,6 @@
+linha 5: inicialização de 'x' espera int, mas recebeu string
+linha 6: argumento 2 de 'soma' esperado int, veio bool
+linha 7: operador '+' não se aplica a int e bool
+linha 8: condição de 'if' deve ser bool, mas é double
+linha 9: 'y' não declarado
+linha 11: atribuição a 'x' espera int, mas recebeu double

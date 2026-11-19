@@ -1,0 +1,6 @@
+int conta() {
+    return 1;
+}
+void f() {
+    conta();
+}

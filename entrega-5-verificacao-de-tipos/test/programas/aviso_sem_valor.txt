@@ -1,0 +1,15 @@
+int f(bool c) {
+    int x;
+    int y;
+    int z;
+    if (c) {
+        x = 1;
+        y = 1;
+    } else {
+        x = 2;
+    }
+    while (c) {
+        z = 1;
+    }
+    return x + y + z;
+}

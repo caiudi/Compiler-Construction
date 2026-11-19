@@ -1,0 +1,1 @@
+linha 3: inicialização de 'x' espera int, mas recebeu double

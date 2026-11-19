@@ -1,0 +1,10 @@
+double metade(double x) {
+    return x / 2;
+}
+int inteiro(int x) {
+    return x;
+}
+void f() {
+    double a = metade(3);
+    int b = inteiro(2.5);
+}

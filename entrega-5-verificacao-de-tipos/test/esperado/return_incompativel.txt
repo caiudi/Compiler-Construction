@@ -1,0 +1,4 @@
+linha 2: 'f' retorna int, mas o return devolve string
+linha 5: procedimento 'p' não pode retornar valor
+linha 8: return sem valor em 'g', que retorna double
+linha 11: 'h' retorna int, mas o return devolve double

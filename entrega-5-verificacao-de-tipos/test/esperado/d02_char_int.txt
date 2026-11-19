@@ -1,0 +1,2 @@
+linha 5: inicialização de 'd' espera char, mas recebeu int
+linha 6: atribuição a 'c' espera char, mas recebeu int

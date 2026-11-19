@@ -1,0 +1,6 @@
+void f() {
+    double d = 1;
+    d = d + 2;
+    int i = 2.5;
+    i = d;
+}

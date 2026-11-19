@@ -1,0 +1,7 @@
+void f() {
+    bool a = 1 == 1.0;
+    bool b = 'a' == 97;
+    bool c = true == false;
+    bool d = "1" == 1;
+    bool e = true == 1;
+}

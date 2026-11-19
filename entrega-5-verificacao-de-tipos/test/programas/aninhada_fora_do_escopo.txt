@@ -1,0 +1,9 @@
+void externo() {
+    int dobro(int x) {
+        return x * 2;
+    }
+    print(dobro(4));
+}
+void outro() {
+    print(dobro(1));
+}

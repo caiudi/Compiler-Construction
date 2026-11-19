@@ -1,0 +1,9 @@
+int contador() {
+    int total = 0;
+    void incrementa(int passo) {
+        total = total + passo;
+    }
+    incrementa(2);
+    incrementa(3);
+    return total;
+}

@@ -1,0 +1,2 @@
+linha 4: inicialização de 'i' espera int, mas recebeu double
+linha 5: atribuição a 'i' espera int, mas recebeu double

@@ -1,0 +1,16 @@
+int x;
+int calcular(int p) {
+    int y;
+    x = p;
+    if (true) {
+        int x;
+        x = p;
+        while (false) {
+            int z;
+            z = x;
+        }
+        x = z;
+    }
+    y = x;
+    return y;
+}

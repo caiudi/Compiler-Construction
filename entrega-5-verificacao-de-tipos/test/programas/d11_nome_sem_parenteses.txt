@@ -1,0 +1,7 @@
+int f() {
+    return 1;
+}
+void g() {
+    int x = f;
+    f = 2;
+}

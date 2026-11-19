@@ -1,0 +1,30 @@
+int total = 0;
+double media;
+string nome = "ana";
+char inicial = 'a';
+bool ativo = true;
+
+double dobro(double x) {
+    return x * 2;
+}
+
+void mostra(string s) {
+    print(s);
+}
+
+int main() {
+    int n;
+    read(n);
+    while (n > 0 && ativo) {
+        total = total + n;
+        n = n - 1;
+    }
+    media = dobro(total);
+    if (inicial == 'a' || !ativo) {
+        mostra(nome + "!");
+    } else {
+        print(inicial);
+    }
+    print(media);
+    return total;
+}

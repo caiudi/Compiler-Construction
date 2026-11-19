@@ -1,0 +1,6 @@
+int f() {
+    int a = 1;
+    bool b = true;
+    int c = a + b;
+    return c;
+}

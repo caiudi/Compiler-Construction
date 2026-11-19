@@ -1,0 +1,2 @@
+linha 5: operador '==' não se aplica a string e int
+linha 6: operador '==' não se aplica a bool e int

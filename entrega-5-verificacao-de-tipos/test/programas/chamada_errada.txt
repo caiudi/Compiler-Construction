@@ -1,0 +1,14 @@
+int fat(int n) {
+    if (n <= 1) {
+        return 1;
+    }
+    return n * fat(n - 1);
+}
+void mostra(string s) {
+    print(s);
+}
+void main() {
+    int a = fat(1, 2);
+    mostra(10);
+    int b = fat();
+}

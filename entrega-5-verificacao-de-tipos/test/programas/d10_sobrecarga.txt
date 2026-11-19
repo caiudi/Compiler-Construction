@@ -1,0 +1,6 @@
+int f(int x) {
+    return x;
+}
+double f(double x) {
+    return x;
+}

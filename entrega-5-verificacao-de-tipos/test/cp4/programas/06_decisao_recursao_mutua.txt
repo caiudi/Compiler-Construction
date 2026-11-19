@@ -1,0 +1,8 @@
+int par(int n) {
+    if (n == 0) { return 1; }
+    return impar(n - 1);
+}
+int impar(int n) {
+    if (n == 0) { return 0; }
+    return par(n - 1);
+}

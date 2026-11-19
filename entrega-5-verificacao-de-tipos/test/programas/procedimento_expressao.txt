@@ -1,0 +1,7 @@
+void avisa() {
+    print("oi");
+}
+int f() {
+    int x = avisa() + 1;
+    return x;
+}

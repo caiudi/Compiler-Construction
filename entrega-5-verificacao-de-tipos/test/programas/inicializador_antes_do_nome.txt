@@ -1,0 +1,4 @@
+double x = 1.5;
+void f() {
+    int x = x;
+}

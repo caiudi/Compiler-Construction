@@ -1,0 +1,12 @@
+int soma(int a, int b) {
+    return a + b;
+}
+void main() {
+    int x = "um";
+    bool ok = soma(1, true) > 0;
+    double d = (x + true) * 2.0 - 1;
+    if (d) {
+        print(y + 1);
+    }
+    x = soma(1, 2) + 0.5;
+}

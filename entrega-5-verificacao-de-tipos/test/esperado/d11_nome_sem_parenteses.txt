@@ -1,0 +1,2 @@
+linha 5: função 'f' usada sem parênteses
+linha 6: 'f' não é variável

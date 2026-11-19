@@ -1,0 +1,7 @@
+void f() {
+    char c = 'a';
+    int codigo = c + 1;
+    bool menor = c < 'z';
+    char d = 66;
+    c = c + 1;
+}

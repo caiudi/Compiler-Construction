@@ -1,0 +1,19 @@
+ProgramNode
+  VarDeclNode
+    TypeNode(kind=INT)
+    IdNode(name=x)
+  VarDeclNode
+    TypeNode(kind=DOUBLE)
+    IdNode(name=d)
+    DoubleLiteralNode(lexeme=3.14)
+  VarDeclNode
+    TypeNode(kind=BOOL)
+    IdNode(name=b)
+    BoolLiteralNode(value=true)
+  VarDeclNode
+    TypeNode(kind=CHAR)
+    IdNode(name=c)
+  VarDeclNode
+    TypeNode(kind=STRING)
+    IdNode(name=s)
+    StringLiteralNode(lexeme="oi")

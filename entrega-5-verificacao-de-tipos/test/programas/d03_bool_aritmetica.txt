@@ -1,0 +1,9 @@
+void f() {
+    bool b = true;
+    int x = b + 1;
+    int y = -b;
+    bool z = !1;
+    if (1) {
+        print(x);
+    }
+}

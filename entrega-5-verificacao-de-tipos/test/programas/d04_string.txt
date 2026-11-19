@@ -1,0 +1,7 @@
+void f() {
+    string a = "ab";
+    string b = a + "cd";
+    bool igual = a == b;
+    bool menor = a < b;
+    string c = a + 1;
+}

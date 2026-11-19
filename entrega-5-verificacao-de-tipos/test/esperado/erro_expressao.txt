@@ -1,0 +1,1 @@
+linha 4: operador '+' não se aplica a int e bool

@@ -1,0 +1,2 @@
+linha 1: função 'sinal' pode terminar sem return
+linha 13: função 'laco' pode terminar sem return

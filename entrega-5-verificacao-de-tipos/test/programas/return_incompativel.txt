@@ -1,0 +1,12 @@
+int f() {
+    return "texto";
+}
+void p() {
+    return 1;
+}
+double g() {
+    return;
+}
+int h() {
+    return 2.5;
+}
